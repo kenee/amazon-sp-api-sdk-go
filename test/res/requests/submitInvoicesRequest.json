@@ -1,1 +1,0 @@
-{"invoices":[{"id":"TestInvoice202","date":"2020-06-08T12:00:00.000Z","billToParty":{"partyId":"TES1"},"invoiceType":"Invoice","remitToParty":{"partyId":"ABCDE"},"invoiceTotal":{"amount":"112.05","currencyCode":"USD"}}]}

@@ -1,1 +1,0 @@
-{"targetApplication":"amzn1.sellerapps.app.target-application","restrictedResources":[{"method":"GET","path":"/orders/v0/orders/{orderId}/address"}]}

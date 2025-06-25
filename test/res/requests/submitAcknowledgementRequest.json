@@ -1,1 +1,0 @@
-{"acknowledgements":[{"purchaseOrderNumber":"TestOrder202","sellingParty":{"partyId":"API01"},"acknowledgementDate":"2021-03-12T17:35:26.308Z","items":[{"vendorProductIdentifier":"028877454078","orderedQuantity":{"amount":10},"netCost":{"amount":"10.2"},"itemAcknowledgements":[{"acknowledgementCode":"Accepted","acknowledgedQuantity":{"amount":10}}]}]}]}

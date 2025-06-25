@@ -1,1 +1,0 @@
-{"filters":{"aggregationFrequency":"YEAR","timeInterval":{"startDate":"2022-01-01T00:00:00Z","endDate":"2022-12-31T00:00:00Z"},"marketplaceId":"ATVPDKIKX0DER","programTypes":["SUBSCRIBE_AND_SAVE"],"timePeriodType":"PERFORMANCE","asins":["B07CYBR5GZ","B07CYJJW8H"]},"pagination":{"limit":2,"offset":0},"sort":{"order":"ASC","key":"TOTAL_SUBSCRIPTIONS_REVENUE"}}

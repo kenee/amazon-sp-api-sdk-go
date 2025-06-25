@@ -1,59 +1,192 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/logo-white.png">
-  <source media="(prefers-color-scheme: light)" srcset="docs/logo-dark.png">
-  <img alt="Selling Partner API SDK logo" src="docs/logo-fallback.png" width="700">
-</picture>
+# Amazon Selling Partner API SDK - Go
 
-[![Maven](https://img.shields.io/maven-central/v/software.amazon.spapi/spapi-sdk.svg?label=Maven)](https://central.sonatype.com/artifact/software.amazon.spapi/spapi-sdk)
-[![Packagist](https://img.shields.io/packagist/v/amzn-spapi/sdk?label=Packagist)](https://packagist.org/packages/amzn-spapi/sdk)
-[![npm version](https://badge.fury.io/js/@amazon-sp-api-release%2Famazon-sp-api-sdk-js.svg)](https://www.npmjs.com/package/@amazon-sp-api-release/amazon-sp-api-sdk-js)
-[![PyPI version](https://img.shields.io/pypi/v/amzn-sp-api?label=PyPI)](https://pypi.org/project/amzn-sp-api/)
-[![NuGet](https://img.shields.io/nuget/v/software.amzn.spapi?label=NuGet)](https://www.nuget.org/packages/software.amzn.spapi)
-[![Go Version](https://img.shields.io/github/go-mod/go-version/amzn/selling-partner-api-sdk/golang)](https://golang.org/dl/)
+This is a Go implementation of the Amazon Selling Partner API SDK, forked from the official [Amazon SP-API SDK](https://github.com/amzn/selling-partner-api-sdk).
 
-The Selling Partner API SDK enables you to easily connect to and work with Amazon's REST-based SP-API. 
+## 🚀 Features
 
-* [Learn more about Selling Partner API](https://developer.amazonservices.com/)
-* [Selling Partner API Documentation](https://developer-docs.amazon.com/sp-api/)
-* [Issues][sdk-issues]
+- **Complete SP-API Support**: Orders, Catalog, and Listings APIs
+- **LWA Authentication**: Login with Amazon authentication with token caching
+- **Production Ready**: Clean, production-ready code without debug logs
+- **Comprehensive Examples**: Working examples for all supported APIs
+- **Error Handling**: Proper error handling and response parsing
+- **Configuration Management**: Flexible configuration options
 
-### How does the SDK work?
+## 📦 Installation
 
-Selling Partner API SDK is a collection of software development tools to connect with Selling Partner API in one installable package. It is published to common package managers and can be easily integrated into new or existing codebases with just a few lines of code. A new version of the SDK will be provided whenever the API changes.
+```bash
+go get github.com/kenee/amazon-sp-api-sdk-go@v1.0.0
+```
 
-### Getting Started
+## 🔧 Prerequisites
 
-#### Prerequisites
+Before using this SDK, you must:
 
-In order to use SP-API you must register as a Selling Partner API developer. Please follow the instructions in the [SP-API Registration Overview](https://developer-docs.amazon.com/sp-api/docs/sp-api-registration-overview).
+1. Register as a Selling Partner API developer
+2. Create an application in Seller Central
+3. Generate LWA credentials (Client ID, Client Secret, Refresh Token)
 
-#### Using the SDK
+For detailed setup instructions, see the [SP-API Registration Overview](https://developer-docs.amazon.com/sp-api/docs/registration-overview).
 
-You can get started with the SDK in minutes following the instructions for your preferred programming language.
+## 🛠️ Quick Start
 
-* [Java](https://github.com/amzn/selling-partner-api-sdk/tree/main/java)
-* [PHP](https://github.com/amzn/selling-partner-api-sdk/tree/main/php)
-* [JavaScript](https://github.com/amzn/selling-partner-api-sdk/tree/main/javascript)
-* [Python](https://github.com/amzn/selling-partner-api-sdk/tree/main/python)
-* [C#](https://github.com/amzn/selling-partner-api-sdk/tree/main/csharp)
-* [Golang](https://github.com/amzn/selling-partner-api-sdk/tree/main/golang)
+### 1. Set up environment variables
 
-### Feature Overview
+Create a `.env` file in your project root:
 
-| Programming language | Basic API Support | RDT Support  | Rate Limiter |
-|----------------------|:-----------------:|:------------:|:------------:|
-| Java                 |         ✅        |      ❌      |      ✅      |
-| PHP                  |         ✅        |      ✅      |      ✅      |
-| JavaScript           |         ✅        |      ❌      |      ✅      |
-| Python               |         ✅        |      ❌      |      ❌      |
-| C#                   |         ✅        |      ❌      |      ❌      |
-| Golang               |         ✅        |      ❌      |      ❌      |
+```env
+SP_API_CLIENT_ID=your_client_id
+SP_API_CLIENT_SECRET=your_client_secret
+SP_API_REFRESH_TOKEN=your_refresh_token
+SP_API_ENDPOINT=https://api.amazon.com/auth/o2/token
+SP_API_ENDPOINT_HOST=https://sandbox.sellingpartnerapi-na.amazon.com
+```
 
-### Giving Feedback
+### 2. Basic usage
 
-We need your help in making this SDK great. Please participate in the community and contribute to this effort by submitting issues, participating in discussion forums and submitting pull requests through the following channels:
+```go
+package main
 
-Submit [issues](https://github.com/amzn/selling-partner-api-sdk/issues/new/choose) - this is the preferred channel to interact with our team
-Articulate your feature request or upvote existing ones on our [Issues][sdk-issues] page
+import (
+    "context"
+    "log"
+    "os"
 
-[sdk-issues]: https://github.com/amzn/selling-partner-api-sdk/issues
+    "github.com/kenee/amazon-sp-api-sdk-go/auth"
+    "github.com/kenee/amazon-sp-api-sdk-go/client"
+    "github.com/kenee/amazon-sp-api-sdk-go/apis/orders"
+    "github.com/joho/godotenv"
+)
+
+func main() {
+    // Load environment variables
+    godotenv.Load()
+
+    // Set up credentials
+    credentials := &auth.LWAAuthorizationCredentials{
+        ClientID:     os.Getenv("SP_API_CLIENT_ID"),
+        ClientSecret: os.Getenv("SP_API_CLIENT_SECRET"),
+        RefreshToken: os.Getenv("SP_API_REFRESH_TOKEN"),
+        Endpoint:     os.Getenv("SP_API_ENDPOINT"),
+    }
+
+    // Initialize configuration
+    config := client.NewConfigurationWithCredentials(credentials)
+    config.SetHost(os.Getenv("SP_API_ENDPOINT_HOST"))
+
+    // Create API client
+    ordersAPI := orders.NewOrdersAPI(config)
+
+    // Make API call
+    ctx := context.Background()
+    response, err := ordersAPI.GetOrdersSimple(ctx, []string{"ATVPDKIKX0DER"}, "2023-01-01T00:00:00Z")
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    // Process response
+    if response.Payload != nil && len(response.Payload.Orders) > 0 {
+        for _, order := range response.Payload.Orders {
+            log.Printf("Order ID: %s", order.AmazonOrderId)
+        }
+    }
+}
+```
+
+## 📚 API Examples
+
+### Orders API
+
+```go
+// Get orders with filters
+request := &orders.GetOrdersRequest{
+    MarketplaceIds: []string{"ATVPDKIKX0DER"},
+    CreatedAfter:   "2023-01-01T00:00:00Z",
+    OrderStatuses:  []string{"Shipped", "Unshipped"},
+}
+
+response, err := ordersAPI.GetOrders(ctx, request)
+```
+
+### Catalog API
+
+```go
+// Get catalog item by ASIN
+request := &catalog.GetCatalogItemRequest{
+    ASIN:           "B071VG5N9D",
+    MarketplaceIds: []string{"ATVPDKIKX0DER"},
+    IncludedData:   []string{"summaries", "attributes", "images"},
+}
+
+response, err := catalogAPI.GetCatalogItem(ctx, request)
+```
+
+### Listings API
+
+```go
+// Get listings item
+request := &listings.GetListingsItemRequest{
+    SellerId:       "A1B2C3D4E5F6G7",
+    SKU:            "GM-ZDPI-9B4E",
+    MarketplaceIds: []string{"ATVPDKIKX0DER"},
+    IncludedData:   []string{"summaries", "offers", "fulfillmentAvailability"},
+}
+
+response, err := listingsAPI.GetListingsItem(ctx, request)
+```
+
+## 🔐 Authentication
+
+The SDK uses Login with Amazon (LWA) for authentication. Token caching is supported to improve performance:
+
+```go
+// Enable token caching
+cache := auth.NewMemoryTokenCache()
+config := client.NewConfigurationWithCredentialsAndCache(credentials, cache)
+```
+
+## 🌍 Environment Support
+
+The SDK supports different SP-API environments:
+
+- **Sandbox**: `https://sandbox.sellingpartnerapi-na.amazon.com`
+- **Production NA**: `https://sellingpartnerapi-na.amazon.com`
+- **Production EU**: `https://sellingpartnerapi-eu.amazon.com`
+- **Production FE**: `https://sellingpartnerapi-fe.amazon.com`
+
+## 📁 Project Structure
+
+```
+.
+├── apis/           # API implementations
+│   ├── orders/     # Orders API
+│   ├── catalog/    # Catalog API
+│   └── listings/   # Listings API
+├── auth/           # Authentication
+├── client/         # HTTP client
+├── examples/       # Usage examples
+├── go.mod          # Go module definition
+├── go.sum          # Dependency checksums
+└── README.md       # This file
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+
+## 🔗 Links
+
+- [Amazon Selling Partner API Documentation](https://developer-docs.amazon.com/sp-api/)
+- [Official SP-API SDK](https://github.com/amzn/selling-partner-api-sdk)
+- [SP-API Registration Overview](https://developer-docs.amazon.com/sp-api/docs/registration-overview)
+
+## ⚠️ Disclaimer
+
+This is an unofficial implementation and is not affiliated with Amazon. Use at your own risk.
