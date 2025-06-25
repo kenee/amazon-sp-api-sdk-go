@@ -24,6 +24,7 @@ $lwaAuthorizationCredentials = new LWAAuthorizationCredentials([
 
 // Initialize configuration
 $config = new Configuration([], $lwaAuthorizationCredentials);
+print_r($config);
 $config->setHost("https://sellingpartnerapi-na.amazon.com");
 
 try {

@@ -4,7 +4,7 @@ require_once '../sdk/vendor/autoload.php';
 
 use SpApi\AuthAndAuth\LWAAuthorizationCredentials;
 use SpApi\Configuration;
-use SpApi\Api\Orders\v0\OrdersV0Api;
+use SpApi\Api\Listings\Items\v2021_08_01\ListingsApi;
 use Dotenv\Dotenv;
 
 // Set the credentials, region and marketplace in .env file
@@ -18,27 +18,26 @@ $lwaAuthorizationCredentials = new LWAAuthorizationCredentials([
     "refreshToken" => $_ENV['SP_API_REFRESH_TOKEN'],
     "endpoint" => $_ENV['SP_API_ENDPOINT']
 ]);
-//Initialize config and set SP-API endpoint region
+
+// Initialize config and set SP-API endpoint region
 $config = new Configuration([], $lwaAuthorizationCredentials);
-print_r($config);
 $config->setHost($_ENV['SP_API_ENDPOINT_HOST']);
 
-// Create an instance of the Orders Api
-$ordersApi = new OrdersV0Api($config);
+// Create API instance
+$listingsApi = new ListingsApi($config);
 
 try {
-    // Call getOrders
-    $response = $ordersApi
-    ->getOrders(
-        ['ATVPDKIKX0DER'], // MarketplaceIds
-        'TEST_CASE_200' // CreatedAfter
+    // Call getListingsItem with minimal parameters
+    $response = $listingsApi->getListingsItem(
+        'A1B2C3D4E5F6G7', // sellerId - 卖家标识符
+        'GM-ZDPI-9B4E', // sku - 卖家提供的亚马逊商品标识符
+        ['ATVPDKIKX0DER'] // marketplaceIds - 美国沙盒市场
     );
 
-    // Process Orders API response
-    echo "Order API Response:\n";
+    // Process Listings Item API response
+    echo "Listings Item API Response (Simple):\n";
     print_r($response);
 
 } catch (Exception $e) {
-    echo 'Exception when calling OrderApi->getOrders: ', $e->getMessage(), PHP_EOL;
-}
-
+    echo 'Exception when calling ListingsApi->getListingsItem: ', $e->getMessage(), PHP_EOL;
+} 

@@ -4,7 +4,7 @@ require_once '../sdk/vendor/autoload.php';
 
 use SpApi\AuthAndAuth\LWAAuthorizationCredentials;
 use SpApi\Configuration;
-use SpApi\Api\Orders\v0\OrdersV0Api;
+use SpApi\Api\CatalogItems\v2022_04_01\CatalogApi;
 use Dotenv\Dotenv;
 
 // Set the credentials, region and marketplace in .env file
@@ -18,27 +18,27 @@ $lwaAuthorizationCredentials = new LWAAuthorizationCredentials([
     "refreshToken" => $_ENV['SP_API_REFRESH_TOKEN'],
     "endpoint" => $_ENV['SP_API_ENDPOINT']
 ]);
-//Initialize config and set SP-API endpoint region
+
+// Initialize config and set SP-API endpoint region
 $config = new Configuration([], $lwaAuthorizationCredentials);
-print_r($config);
 $config->setHost($_ENV['SP_API_ENDPOINT_HOST']);
 
-// Create an instance of the Orders Api
-$ordersApi = new OrdersV0Api($config);
+// Create API instance
+$catalogApi = new CatalogApi($config);
 
 try {
-    // Call getOrders
-    $response = $ordersApi
-    ->getOrders(
-        ['ATVPDKIKX0DER'], // MarketplaceIds
-        'TEST_CASE_200' // CreatedAfter
+    // Call getCatalogItem with minimal data
+    $response = $catalogApi->getCatalogItem(
+        'B07N4M94X4', // ASIN - 沙盒测试 ASIN
+        ['ATVPDKIKX0DER'], // MarketplaceIds - 美国沙盒
+        ['summaries'], // includedData - 只包含摘要信息
+        'en_US' // locale - 语言环境
     );
 
-    // Process Orders API response
-    echo "Order API Response:\n";
+    // Process Catalog Item API response
+    echo "Catalog Item API Response (Simple):\n";
     print_r($response);
 
 } catch (Exception $e) {
-    echo 'Exception when calling OrderApi->getOrders: ', $e->getMessage(), PHP_EOL;
-}
-
+    echo 'Exception when calling CatalogApi->getCatalogItem: ', $e->getMessage(), PHP_EOL;
+} 
