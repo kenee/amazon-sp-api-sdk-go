@@ -9,6 +9,7 @@
 [![npm version](https://badge.fury.io/js/@amazon-sp-api-release%2Famazon-sp-api-sdk-js.svg)](https://www.npmjs.com/package/@amazon-sp-api-release/amazon-sp-api-sdk-js)
 [![PyPI version](https://img.shields.io/pypi/v/amzn-sp-api?label=PyPI)](https://pypi.org/project/amzn-sp-api/)
 [![NuGet](https://img.shields.io/nuget/v/software.amzn.spapi?label=NuGet)](https://www.nuget.org/packages/software.amzn.spapi)
+[![Go Version](https://img.shields.io/github/go-mod/go-version/amzn/selling-partner-api-sdk/golang)](https://golang.org/dl/)
 
 The Selling Partner API SDK enables you to easily connect to and work with Amazon's REST-based SP-API. 
 
@@ -35,6 +36,7 @@ You can get started with the SDK in minutes following the instructions for your 
 * [JavaScript](https://github.com/amzn/selling-partner-api-sdk/tree/main/javascript)
 * [Python](https://github.com/amzn/selling-partner-api-sdk/tree/main/python)
 * [C#](https://github.com/amzn/selling-partner-api-sdk/tree/main/csharp)
+* [Golang](https://github.com/amzn/selling-partner-api-sdk/tree/main/golang)
 
 ### Feature Overview
 
@@ -45,6 +47,7 @@ You can get started with the SDK in minutes following the instructions for your 
 | JavaScript           |         ✅        |      ❌      |      ✅      |
 | Python               |         ✅        |      ❌      |      ❌      |
 | C#                   |         ✅        |      ❌      |      ❌      |
+| Golang               |         ✅        |      ❌      |      ❌      |
 
 ### Giving Feedback
 
