@@ -147,3 +147,124 @@ type ListingProcurement struct {
 	ProductType   string                 `json:"productType"`
 	Procurement   map[string]interface{} `json:"procurement,omitempty"`
 }
+
+// GetListingsRestrictionsRequest represents the request parameters for getListingsRestrictions
+type GetListingsRestrictionsRequest struct {
+	SellerId       string   `json:"sellerId"`
+	MarketplaceIds []string `json:"marketplaceIds"`
+	ASIN           string   `json:"asin"`
+	ConditionType  string   `json:"conditionType,omitempty"`
+	IssueLocale    string   `json:"issueLocale,omitempty"`
+}
+
+// GetListingsRestrictionsResponse represents the response from getListingsRestrictions
+type GetListingsRestrictionsResponse struct {
+	Restrictions []Restriction `json:"restrictions,omitempty"`
+}
+
+// Restriction represents a listing restriction
+type Restriction struct {
+	MarketplaceId string   `json:"marketplaceId"`
+	ConditionType string   `json:"conditionType"`
+	Reasons       []Reason `json:"reasons,omitempty"`
+}
+
+// Reason represents a restriction reason
+type Reason struct {
+	Message    string `json:"message"`
+	ReasonCode string `json:"reasonCode,omitempty"`
+	Links      []Link `json:"links,omitempty"`
+}
+
+// Link represents a link
+type Link struct {
+	Resource string `json:"resource"`
+	Title    string `json:"title"`
+}
+
+// PutListingsItemRequest represents the request parameters for putListingsItem
+type PutListingsItemRequest struct {
+	SellerId       string                 `json:"sellerId"`
+	SKU            string                 `json:"sku"`
+	MarketplaceIds []string               `json:"marketplaceIds"`
+	ProductType    string                 `json:"productType"`
+	Requirements   string                 `json:"requirements"`
+	Attributes     map[string]interface{} `json:"attributes,omitempty"`
+	IssueLocale    string                 `json:"issueLocale,omitempty"`
+}
+
+// PutListingsItemResponse represents the response from putListingsItem
+type PutListingsItemResponse struct {
+	SKU          string         `json:"sku"`
+	Status       string         `json:"status"`
+	SubmissionId string         `json:"submissionId"`
+	Issues       []ListingIssue `json:"issues,omitempty"`
+}
+
+// PatchOperation represents a patch operation
+type PatchOperation struct {
+	Op    string      `json:"op"`
+	Path  string      `json:"path"`
+	Value interface{} `json:"value,omitempty"`
+}
+
+// PatchListingsItemRequest represents the request parameters for patchListingsItem
+type PatchListingsItemRequest struct {
+	SellerId       string           `json:"sellerId"`
+	SKU            string           `json:"sku"`
+	MarketplaceIds []string         `json:"marketplaceIds"`
+	ProductType    string           `json:"productType"`
+	Patches        []PatchOperation `json:"patches"`
+	IssueLocale    string           `json:"issueLocale,omitempty"`
+}
+
+// PatchListingsItemResponse represents the response from patchListingsItem
+type PatchListingsItemResponse struct {
+	SKU          string         `json:"sku"`
+	Status       string         `json:"status"`
+	SubmissionId string         `json:"submissionId"`
+	Issues       []ListingIssue `json:"issues,omitempty"`
+}
+
+// SearchListingsItemsRequest represents the request parameters for searchListingsItems
+type SearchListingsItemsRequest struct {
+	SellerId            string   `json:"sellerId"`
+	MarketplaceIds      []string `json:"marketplaceIds"`
+	IssueLocale         string   `json:"issueLocale,omitempty"`
+	IncludedData        []string `json:"includedData,omitempty"`
+	Identifiers         []string `json:"identifiers,omitempty"`
+	IdentifiersType     string   `json:"identifiersType,omitempty"`
+	VariationParentSku  string   `json:"variationParentSku,omitempty"`
+	PackageHierarchySku string   `json:"packageHierarchySku,omitempty"`
+	CreatedAfter        string   `json:"createdAfter,omitempty"`
+	CreatedBefore       string   `json:"createdBefore,omitempty"`
+	LastUpdatedAfter    string   `json:"lastUpdatedAfter,omitempty"`
+	LastUpdatedBefore   string   `json:"lastUpdatedBefore,omitempty"`
+	WithIssueSeverity   []string `json:"withIssueSeverity,omitempty"`
+	WithStatus          []string `json:"withStatus,omitempty"`
+	WithoutStatus       []string `json:"withoutStatus,omitempty"`
+	SortBy              string   `json:"sortBy,omitempty"`
+	SortOrder           string   `json:"sortOrder,omitempty"`
+	PageSize            int      `json:"pageSize,omitempty"`
+	PageToken           string   `json:"pageToken,omitempty"`
+}
+
+// SearchListingsItemsResponse represents the response from searchListingsItems
+type SearchListingsItemsResponse struct {
+	Listings   []ListingItem `json:"listings,omitempty"`
+	Pagination *Pagination   `json:"pagination,omitempty"`
+}
+
+// ListingItem represents a listing item in search results
+type ListingItem struct {
+	SKU       string           `json:"sku"`
+	Status    string           `json:"status"`
+	Summaries []ListingSummary `json:"summaries,omitempty"`
+	Issues    []ListingIssue   `json:"issues,omitempty"`
+}
+
+// Pagination represents pagination information
+type Pagination struct {
+	NextToken     string `json:"nextToken,omitempty"`
+	PreviousToken string `json:"previousToken,omitempty"`
+}

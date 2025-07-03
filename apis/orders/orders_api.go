@@ -26,63 +26,63 @@ func (o *OrdersAPI) GetOrders(ctx context.Context, request *GetOrdersRequest) (*
 
 	// Required parameters
 	if len(request.MarketplaceIds) > 0 {
-		params["MarketplaceIds"] = request.MarketplaceIds
+		params["marketplaceIds"] = request.MarketplaceIds
 	}
 
 	// Optional parameters
 	if request.CreatedAfter != "" {
-		params["CreatedAfter"] = request.CreatedAfter
+		params["createdAfter"] = request.CreatedAfter
 	}
 	if request.CreatedBefore != "" {
-		params["CreatedBefore"] = request.CreatedBefore
+		params["createdBefore"] = request.CreatedBefore
 	}
 	if request.LastUpdatedAfter != "" {
-		params["LastUpdatedAfter"] = request.LastUpdatedAfter
+		params["lastUpdatedAfter"] = request.LastUpdatedAfter
 	}
 	if request.LastUpdatedBefore != "" {
-		params["LastUpdatedBefore"] = request.LastUpdatedBefore
+		params["lastUpdatedBefore"] = request.LastUpdatedBefore
 	}
 	if len(request.OrderStatuses) > 0 {
-		params["OrderStatuses"] = request.OrderStatuses
+		params["orderStatuses"] = request.OrderStatuses
 	}
 	if len(request.FulfillmentChannels) > 0 {
-		params["FulfillmentChannels"] = request.FulfillmentChannels
+		params["fulfillmentChannels"] = request.FulfillmentChannels
 	}
 	if len(request.PaymentMethods) > 0 {
-		params["PaymentMethods"] = request.PaymentMethods
+		params["paymentMethods"] = request.PaymentMethods
 	}
 	if request.BuyerEmail != "" {
-		params["BuyerEmail"] = request.BuyerEmail
+		params["buyerEmail"] = request.BuyerEmail
 	}
 	if request.SellerOrderId != "" {
-		params["SellerOrderId"] = request.SellerOrderId
+		params["sellerOrderId"] = request.SellerOrderId
 	}
 	if request.MaxResultsPerPage > 0 {
-		params["MaxResultsPerPage"] = request.MaxResultsPerPage
+		params["maxResultsPerPage"] = request.MaxResultsPerPage
 	}
 	if len(request.EasyShipShipmentStatuses) > 0 {
-		params["EasyShipShipmentStatuses"] = request.EasyShipShipmentStatuses
+		params["easyShipShipmentStatuses"] = request.EasyShipShipmentStatuses
 	}
 	if len(request.ElectronicInvoiceStatuses) > 0 {
-		params["ElectronicInvoiceStatuses"] = request.ElectronicInvoiceStatuses
+		params["electronicInvoiceStatuses"] = request.ElectronicInvoiceStatuses
 	}
 	if request.NextToken != "" {
-		params["NextToken"] = request.NextToken
+		params["nextToken"] = request.NextToken
 	}
 	if len(request.AmazonOrderIds) > 0 {
-		params["AmazonOrderIds"] = request.AmazonOrderIds
+		params["amazonOrderIds"] = request.AmazonOrderIds
 	}
 	if request.ActualFulfillmentSupplySourceId != "" {
-		params["ActualFulfillmentSupplySourceId"] = request.ActualFulfillmentSupplySourceId
+		params["actualFulfillmentSupplySourceId"] = request.ActualFulfillmentSupplySourceId
 	}
 	if request.IsISPU != nil {
-		params["IsISPU"] = *request.IsISPU
+		params["isISPU"] = *request.IsISPU
 	}
 	if request.StoreChainStoreId != "" {
-		params["StoreChainStoreId"] = request.StoreChainStoreId
+		params["storeChainStoreId"] = request.StoreChainStoreId
 	}
 	if request.RestrictedDataToken != "" {
-		params["RestrictedDataToken"] = request.RestrictedDataToken
+		params["restrictedDataToken"] = request.RestrictedDataToken
 	}
 
 	// Build query string

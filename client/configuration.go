@@ -94,6 +94,10 @@ func NewConfigurationFromMap(configMap map[string]interface{}) (*Configuration, 
 
 // SetHost sets the API host
 func (c *Configuration) SetHost(host string) {
+	// 如果主机名不包含协议前缀，添加 https://
+	if !strings.HasPrefix(host, "http://") && !strings.HasPrefix(host, "https://") {
+		host = "https://" + host
+	}
 	c.Host = host
 }
 

@@ -149,3 +149,8 @@ func (c *CatalogAPI) SearchCatalogItemsSimple(ctx context.Context, marketplaceId
 	}
 	return c.SearchCatalogItems(ctx, request)
 }
+
+// GetAPIClient returns the underlying API client
+func (c *CatalogAPI) GetAPIClient() *client.APIClient {
+	return c.apiClient
+}

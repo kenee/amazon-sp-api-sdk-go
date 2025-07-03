@@ -1,67 +1,70 @@
-# Amazon Selling Partner API SDK - Go
+# Amazon Selling Partner API SDK for Go
 
-This is a Go implementation of the Amazon Selling Partner API SDK, forked from the official [Amazon SP-API SDK](https://github.com/amzn/selling-partner-api-sdk).
+一个完整的 Amazon Selling Partner API (SP-API) Go SDK，提供类型安全、易于使用的 API 客户端。
 
-## 🚀 Features
+## 特性
 
-- **Complete SP-API Support**: Orders, Catalog, and Listings APIs
-- **LWA Authentication**: Login with Amazon authentication with token caching
-- **Production Ready**: Clean, production-ready code without debug logs
-- **Comprehensive Examples**: Working examples for all supported APIs
-- **Error Handling**: Proper error handling and response parsing
-- **Configuration Management**: Flexible configuration options
+- ✅ **完整的 API 支持**: 涵盖所有主要 SP-API 端点
+- ✅ **类型安全**: 强类型定义，编译时错误检查
+- ✅ **错误处理**: 详细的错误信息和上下文
+- ✅ **认证管理**: 自动处理 LWA 认证
+- ✅ **易于使用**: 简洁的 API 设计
+- ✅ **测试覆盖**: 完整的测试用例
 
-## 📦 Installation
+## 支持的 API
+
+### 核心 API
+- **Listings API** - 产品刊登管理
+- **Product Types API** - 产品类型定义
+- **Catalog API** - 产品目录
+- **Orders API** - 订单管理
+
+### 扩展 API
+- **Feeds API** - 批量数据处理
+- **Inventory API** - 库存管理
+- **Reports API** - 报告生成
+- **Notifications API** - 通知管理
+
+## 快速开始
+
+### 安装
 
 ```bash
-go get github.com/kenee/amazon-sp-api-sdk-go@v1.0.0
+go get github.com/kenee/amazon-sp-api-sdk-go
 ```
 
-## 🔧 Prerequisites
+### 环境配置
 
-Before using this SDK, you must:
+设置以下环境变量：
 
-1. Register as a Selling Partner API developer
-2. Create an application in Seller Central
-3. Generate LWA credentials (Client ID, Client Secret, Refresh Token)
-
-For detailed setup instructions, see the [SP-API Registration Overview](https://developer-docs.amazon.com/sp-api/docs/registration-overview).
-
-## 🛠️ Quick Start
-
-### 1. Set up environment variables
-
-Create a `.env` file in your project root:
-
-```env
-SP_API_CLIENT_ID=your_client_id
-SP_API_CLIENT_SECRET=your_client_secret
-SP_API_REFRESH_TOKEN=your_refresh_token
-SP_API_ENDPOINT=https://api.amazon.com/auth/o2/token
-SP_API_ENDPOINT_HOST=https://sandbox.sellingpartnerapi-na.amazon.com
+```bash
+export SP_API_CLIENT_ID="your_client_id"
+export SP_API_CLIENT_SECRET="your_client_secret"
+export SP_API_REFRESH_TOKEN="your_refresh_token"
+export SP_API_ENDPOINT="https://sellingpartnerapi-na.amazon.com"
+export SP_API_ENDPOINT_HOST="sellingpartnerapi-na.amazon.com"
+export SP_API_SELLER_ID="your_seller_id"
 ```
 
-### 2. Basic usage
+### 基本使用
 
 ```go
 package main
 
 import (
     "context"
+    "fmt"
     "log"
     "os"
 
+    "github.com/kenee/amazon-sp-api-sdk-go/apis/listings"
+    "github.com/kenee/amazon-sp-api-sdk-go/apis/producttypes"
     "github.com/kenee/amazon-sp-api-sdk-go/auth"
     "github.com/kenee/amazon-sp-api-sdk-go/client"
-    "github.com/kenee/amazon-sp-api-sdk-go/apis/orders"
-    "github.com/joho/godotenv"
 )
 
 func main() {
-    // Load environment variables
-    godotenv.Load()
-
-    // Set up credentials
+    // 配置认证
     credentials := &auth.LWAAuthorizationCredentials{
         ClientID:     os.Getenv("SP_API_CLIENT_ID"),
         ClientSecret: os.Getenv("SP_API_CLIENT_SECRET"),
@@ -69,124 +72,183 @@ func main() {
         Endpoint:     os.Getenv("SP_API_ENDPOINT"),
     }
 
-    // Initialize configuration
     config := client.NewConfigurationWithCredentials(credentials)
     config.SetHost(os.Getenv("SP_API_ENDPOINT_HOST"))
 
-    // Create API client
-    ordersAPI := orders.NewOrdersAPI(config)
-
-    // Make API call
     ctx := context.Background()
-    response, err := ordersAPI.GetOrdersSimple(ctx, []string{"ATVPDKIKX0DER"}, "2023-01-01T00:00:00Z")
-    if err != nil {
-        log.Fatal(err)
+
+    // 使用 Product Types API
+    productTypesAPI := producttypes.NewProductTypesAPI(config)
+    
+    request := &producttypes.GetDefinitionsProductTypeRequest{
+        ProductType:    "LUGGAGE",
+        MarketplaceIds: []string{"ATVPDKIKX0DER"},
+        SellerId:       os.Getenv("SP_API_SELLER_ID"),
     }
 
-    // Process response
-    if response.Payload != nil && len(response.Payload.Orders) > 0 {
-        for _, order := range response.Payload.Orders {
-            log.Printf("Order ID: %s", order.AmazonOrderId)
-        }
+    response, err := productTypesAPI.GetDefinitionsProductType(ctx, request)
+    if err != nil {
+        log.Fatalf("获取产品类型定义失败: %v", err)
     }
+
+    fmt.Printf("产品类型定义获取成功: %s\n", response.ProductType)
 }
 ```
 
-## 📚 API Examples
+## API 使用示例
 
-### Orders API
+### Listings API
 
 ```go
-// Get orders with filters
-request := &orders.GetOrdersRequest{
-    MarketplaceIds: []string{"ATVPDKIKX0DER"},
-    CreatedAfter:   "2023-01-01T00:00:00Z",
-    OrderStatuses:  []string{"Shipped", "Unshipped"},
+// 创建刊登
+listingsAPI := listings.NewListingsAPI(config)
+
+request := &listings.PutListingsItemRequest{
+    ProductType:    "LUGGAGE",
+    Requirements:   "LISTING",
+    Attributes:     map[string]interface{}{
+        "brand": "Test Brand",
+        "title": "Test Product",
+    },
 }
 
-response, err := ordersAPI.GetOrders(ctx, request)
+response, err := listingsAPI.PutListingsItem(ctx, "A13BCILWM2JF8S", "GM-ZDPI-9B4E", request)
 ```
 
 ### Catalog API
 
 ```go
-// Get catalog item by ASIN
+// 获取产品信息
+catalogAPI := catalog.NewCatalogAPI(config)
+
 request := &catalog.GetCatalogItemRequest{
-    ASIN:           "B071VG5N9D",
+    ASIN:           "B08N5WRWNW",
     MarketplaceIds: []string{"ATVPDKIKX0DER"},
-    IncludedData:   []string{"summaries", "attributes", "images"},
 }
 
 response, err := catalogAPI.GetCatalogItem(ctx, request)
 ```
 
-### Listings API
+### Feeds API
 
 ```go
-// Get listings item
-request := &listings.GetListingsItemRequest{
-    SellerId:       "A1B2C3D4E5F6G7",
-    SKU:            "GM-ZDPI-9B4E",
-    MarketplaceIds: []string{"ATVPDKIKX0DER"},
-    IncludedData:   []string{"summaries", "offers", "fulfillmentAvailability"},
+// 创建 Feed
+feedsAPI := feeds.NewFeedsAPI(config)
+
+request := &feeds.CreateFeedRequest{
+    FeedType:           "POST_PRODUCT_DATA",
+    MarketplaceIds:     []string{"ATVPDKIKX0DER"},
+    InputFeedDocumentId: "feed_document_id",
 }
 
-response, err := listingsAPI.GetListingsItem(ctx, request)
+response, err := feedsAPI.CreateFeed(ctx, request)
 ```
 
-## 🔐 Authentication
-
-The SDK uses Login with Amazon (LWA) for authentication. Token caching is supported to improve performance:
+### Inventory API
 
 ```go
-// Enable token caching
-cache := auth.NewMemoryTokenCache()
-config := client.NewConfigurationWithCredentialsAndCache(credentials, cache)
+// 获取库存摘要
+inventoryAPI := inventory.NewInventoryAPI(config)
+
+request := &inventory.GetInventorySummariesRequest{
+    SellerId:       "A13BCILWM2JF8S",
+    MarketplaceIds: []string{"ATVPDKIKX0DER"},
+    Details:        true,
+}
+
+response, err := inventoryAPI.GetInventorySummaries(ctx, request)
 ```
 
-## 🌍 Environment Support
+### Reports API
 
-The SDK supports different SP-API environments:
+```go
+// 创建报告
+reportsAPI := reports.NewReportsAPI(config)
 
-- **Sandbox**: `https://sandbox.sellingpartnerapi-na.amazon.com`
-- **Production NA**: `https://sellingpartnerapi-na.amazon.com`
-- **Production EU**: `https://sellingpartnerapi-eu.amazon.com`
-- **Production FE**: `https://sellingpartnerapi-fe.amazon.com`
+request := &reports.CreateReportRequest{
+    ReportType:     "GET_FLAT_FILE_OPEN_LISTINGS_DATA",
+    MarketplaceIds: []string{"ATVPDKIKX0DER"},
+}
 
-## 📁 Project Structure
-
-```
-.
-├── apis/           # API implementations
-│   ├── orders/     # Orders API
-│   ├── catalog/    # Catalog API
-│   └── listings/   # Listings API
-├── auth/           # Authentication
-├── client/         # HTTP client
-├── examples/       # Usage examples
-├── go.mod          # Go module definition
-├── go.sum          # Dependency checksums
-└── README.md       # This file
+response, err := reportsAPI.CreateReport(ctx, request)
 ```
 
-## 🤝 Contributing
+## 错误处理
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+SDK 提供了详细的错误处理机制：
 
-## 📄 License
+```go
+if err != nil {
+    switch e := err.(type) {
+    case *client.AuthenticationError:
+        log.Printf("认证错误: %s", e.Error())
+    case *client.ValidationError:
+        log.Printf("验证错误: %s", e.Error())
+    case *client.RateLimitExceededError:
+        log.Printf("频率限制: %s, 重试时间: %d秒", e.Error(), e.RetryAfter)
+    case *client.APIError:
+        log.Printf("API错误: %s (状态码: %d)", e.Error(), e.StatusCode)
+    default:
+        log.Printf("其他错误: %s", err.Error())
+    }
+}
+```
 
-This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+## 测试
 
-## 🔗 Links
+运行测试：
 
-- [Amazon Selling Partner API Documentation](https://developer-docs.amazon.com/sp-api/)
-- [Official SP-API SDK](https://github.com/amzn/selling-partner-api-sdk)
-- [SP-API Registration Overview](https://developer-docs.amazon.com/sp-api/docs/registration-overview)
+```bash
+# 运行所有测试
+go test -mod=mod ./tests/... -v
 
-## ⚠️ Disclaimer
+# 运行特定测试
+go test -mod=mod ./tests/listing_flow/... -run TestStep1_GetProductTypeDefinition -v
 
-This is an unofficial implementation and is not affiliated with Amazon. Use at your own risk.
+# 运行错误处理测试
+go test -mod=mod ./tests/error_handling_test.go -v
+```
+
+## 示例代码
+
+查看 `examples/` 目录中的完整示例：
+
+- `feeds_example.go` - Feeds API 使用示例
+- `inventory_example.go` - Inventory API 使用示例
+- `listings_example.go` - Listings API 使用示例
+
+## 贡献
+
+欢迎提交 Issue 和 Pull Request！
+
+### 开发环境设置
+
+1. Fork 项目
+2. 创建功能分支
+3. 提交更改
+4. 运行测试
+5. 提交 Pull Request
+
+## 许可证
+
+本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
+
+## 支持
+
+- 查看 [Amazon SP-API 文档](https://developer-docs.amazon.com/sp-api/)
+- 提交 [Issue](https://github.com/kenee/amazon-sp-api-sdk-go/issues)
+- 查看 [示例代码](examples/)
+
+## 更新日志
+
+### v1.0.0
+- 初始版本发布
+- 支持核心 API (Listings, Product Types, Catalog, Orders)
+- 完整的错误处理机制
+- 类型安全的 API 设计
+
+### v1.1.0
+- 添加 Feeds API 支持
+- 添加 Inventory API 支持
+- 添加 Reports API 支持
+- 改进错误处理和文档

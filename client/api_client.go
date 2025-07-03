@@ -111,17 +111,24 @@ func (c *APIClient) CallAPIWithArrayQueryParams(ctx context.Context, method, pat
 func (c *APIClient) ProcessResponse(resp *http.Response, target interface{}) error {
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return fmt.Errorf("failed to read response body: %w", err)
+		return &NetworkError{
+			Message: "Failed to read response body",
+			Cause:   err,
+		}
 	}
 
 	// Check if response is successful
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		return fmt.Errorf("API request failed with status %d: %s", resp.StatusCode, string(body))
+		// Use the new error parsing mechanism
+		return ParseAPIError(resp.StatusCode, string(body), resp.Header)
 	}
 
 	// Parse response body
 	if err := json.Unmarshal(body, target); err != nil {
-		return fmt.Errorf("failed to unmarshal response: %w", err)
+		return &ValidationError{
+			Message: "Failed to parse response JSON",
+			Value:   string(body),
+		}
 	}
 
 	return nil
