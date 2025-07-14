@@ -47,8 +47,8 @@ type Order struct {
 	OrderChannel                   string                     `json:"orderChannel,omitempty"`
 	ShipServiceLevel               string                     `json:"shipServiceLevel,omitempty"`
 	OrderTotal                     *Money                     `json:"orderTotal,omitempty"`
-	NumberOfItemsShipped           int                        `json:"numberOfItemsShipped,omitempty"`
-	NumberOfItemsUnshipped         int                        `json:"numberOfItemsUnshipped,omitempty"`
+	NumberOfItemsShipped           *int                       `json:"numberOfItemsShipped,omitempty"`
+	NumberOfItemsUnshipped         *int                       `json:"numberOfItemsUnshipped,omitempty"`
 	PaymentMethod                  string                     `json:"paymentMethod,omitempty"`
 	MarketplaceId                  string                     `json:"marketplaceId,omitempty"`
 	ShipmentServiceLevelCategory   string                     `json:"shipmentServiceLevelCategory,omitempty"`
@@ -57,26 +57,26 @@ type Order struct {
 	LatestShipDate                 string                     `json:"latestShipDate,omitempty"`
 	EarliestDeliveryDate           string                     `json:"earliestDeliveryDate,omitempty"`
 	LatestDeliveryDate             string                     `json:"latestDeliveryDate,omitempty"`
-	IsBusinessOrder                bool                       `json:"isBusinessOrder,omitempty"`
-	IsPrime                        bool                       `json:"isPrime,omitempty"`
-	IsGlobalExpressEnabled         bool                       `json:"isGlobalExpressEnabled,omitempty"`
-	IsReplacementOrder             bool                       `json:"isReplacementOrder,omitempty"`
-	IsAccessPointOrder             bool                       `json:"isAccessPointOrder,omitempty"`
-	IsISPU                         bool                       `json:"isISPU,omitempty"`
-	IsPremiumOrder                 bool                       `json:"isPremiumOrder,omitempty"`
-	IsPrimeAccess                  bool                       `json:"isPrimeAccess,omitempty"`
-	IsPendingVulnerabilityScan     bool                       `json:"isPendingVulnerabilityScan,omitempty"`
-	IsEstimatedShipDateSet         bool                       `json:"isEstimatedShipDateSet,omitempty"`
-	IsSoldByAB                     bool                       `json:"isSoldByAB,omitempty"`
+	IsBusinessOrder                *bool                      `json:"isBusinessOrder,omitempty"`
+	IsPrime                        *bool                      `json:"isPrime,omitempty"`
+	IsGlobalExpressEnabled         *bool                      `json:"isGlobalExpressEnabled,omitempty"`
+	IsReplacementOrder             *bool                      `json:"isReplacementOrder,omitempty"`
+	IsAccessPointOrder             *bool                      `json:"isAccessPointOrder,omitempty"`
+	IsISPU                         *bool                      `json:"isISPU,omitempty"`
+	IsPremiumOrder                 *bool                      `json:"isPremiumOrder,omitempty"`
+	IsPrimeAccess                  *bool                      `json:"isPrimeAccess,omitempty"`
+	IsPendingVulnerabilityScan     *bool                      `json:"isPendingVulnerabilityScan,omitempty"`
+	IsEstimatedShipDateSet         *bool                      `json:"isEstimatedShipDateSet,omitempty"`
+	IsSoldByAB                     *bool                      `json:"isSoldByAB,omitempty"`
 	DefaultShipFromLocationAddress *Address                   `json:"defaultShipFromLocationAddress,omitempty"`
 	FulfillmentInstruction         *FulfillmentInstruction    `json:"fulfillmentInstruction,omitempty"`
-	IsISPUAccessPointOrder         bool                       `json:"isISPUAccessPointOrder,omitempty"`
+	IsISPUAccessPointOrder         *bool                      `json:"isISPUAccessPointOrder,omitempty"`
 	MarketplaceTaxInfo             *MarketplaceTaxInfo        `json:"marketplaceTaxInfo,omitempty"`
 	SellerDisplayName              string                     `json:"sellerDisplayName,omitempty"`
 	ShippingAddress                *Address                   `json:"shippingAddress,omitempty"`
 	BuyerInfo                      *BuyerInfo                 `json:"buyerInfo,omitempty"`
 	AutomatedShippingSettings      *AutomatedShippingSettings `json:"automatedShippingSettings,omitempty"`
-	HasRegulatedItems              bool                       `json:"hasRegulatedItems,omitempty"`
+	HasRegulatedItems              *bool                      `json:"hasRegulatedItems,omitempty"`
 	ElectronicInvoiceStatus        string                     `json:"electronicInvoiceStatus,omitempty"`
 	ItemApprovalTypes              []string                   `json:"itemApprovalTypes,omitempty"`
 	ItemApprovalStatus             []string                   `json:"itemApprovalStatus,omitempty"`

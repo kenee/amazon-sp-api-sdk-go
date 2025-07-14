@@ -6,3 +6,6 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 )
+
+// 本地开发时使用本地代码（发布前请注释掉）
+// replace github.com/kenee/amazon-sp-api-sdk-go => ./

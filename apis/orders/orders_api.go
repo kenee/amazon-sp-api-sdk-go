@@ -19,6 +19,11 @@ func NewOrdersAPI(config *client.Configuration) *OrdersAPI {
 	}
 }
 
+// GetAPIClient returns the underlying API client
+func (o *OrdersAPI) GetAPIClient() *client.APIClient {
+	return o.apiClient
+}
+
 // GetOrders retrieves orders based on the specified criteria
 func (o *OrdersAPI) GetOrders(ctx context.Context, request *GetOrdersRequest) (*GetOrdersResponse, error) {
 	// Build query parameters

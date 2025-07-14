@@ -3,9 +3,11 @@ package client
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"runtime"
 	"strings"
 
+	"github.com/joho/godotenv"
 	"github.com/kenee/amazon-sp-api-sdk-go/auth"
 )
 
@@ -88,6 +90,68 @@ func NewConfigurationFromMap(configMap map[string]interface{}) (*Configuration, 
 			config.LwaAuthSigner.SetCache(tokenCache)
 		}
 	}
+
+	return config, nil
+}
+
+// LoadEnvironmentVariables loads environment variables from .env files
+// It tries multiple possible paths for the .env file
+func LoadEnvironmentVariables() error {
+	envPaths := []string{
+		".env",
+		"../../.env",
+		"../../../.env",
+		"../../../../.env",
+	}
+
+	for _, path := range envPaths {
+		if err := godotenv.Load(path); err == nil {
+			return nil // 成功加载
+		}
+	}
+
+	return fmt.Errorf("no .env file found in any of the expected paths")
+}
+
+// NewConfigurationFromEnvironment creates a new configuration by loading environment variables
+// and creating credentials from them
+func NewConfigurationFromEnvironment() (*Configuration, error) {
+	// 尝试加载环境变量
+	if err := LoadEnvironmentVariables(); err != nil {
+		return nil, fmt.Errorf("failed to load environment variables: %w", err)
+	}
+
+	// 检查必要的环境变量
+	requiredEnvVars := []string{
+		"SP_API_CLIENT_ID",
+		"SP_API_CLIENT_SECRET",
+		"SP_API_REFRESH_TOKEN",
+		"SP_API_ENDPOINT",
+		"SP_API_ENDPOINT_HOST",
+	}
+
+	missingVars := []string{}
+	for _, envVar := range requiredEnvVars {
+		if os.Getenv(envVar) == "" {
+			missingVars = append(missingVars, envVar)
+		}
+	}
+
+	if len(missingVars) > 0 {
+		return nil, fmt.Errorf("missing required environment variables: %s", strings.Join(missingVars, ", "))
+	}
+
+	// 创建认证凭据
+	credentials := &auth.LWAAuthorizationCredentials{
+		ClientID:     os.Getenv("SP_API_CLIENT_ID"),
+		ClientSecret: os.Getenv("SP_API_CLIENT_SECRET"),
+		RefreshToken: os.Getenv("SP_API_REFRESH_TOKEN"),
+		Endpoint:     os.Getenv("SP_API_ENDPOINT"),
+	}
+
+	// 创建配置
+	config := NewConfigurationWithCredentials(credentials)
+	config.SetHost(os.Getenv("SP_API_ENDPOINT_HOST"))
 
 	return config, nil
 }

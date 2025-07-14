@@ -18,3 +18,42 @@ python/openapitools.json
 **/testreports/
 **/.openapi-generator/
 php/.idea
+examples/sandbox/.env
+examples/production/.env
+.env
+.env.prod
+.env.sbx
+
+# Go specific
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+
+# Go build artifacts
+/bin/
+/dist/
+/build/
+
+# Go test files (keep test files but ignore test binaries)
+*_test
+
+# IDE files
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp

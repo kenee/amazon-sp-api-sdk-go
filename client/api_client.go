@@ -125,9 +125,12 @@ func (c *APIClient) ProcessResponse(resp *http.Response, target interface{}) err
 
 	// Parse response body
 	if err := json.Unmarshal(body, target); err != nil {
+		// 如果JSON解析失败，返回原始响应体而不是解析错误
 		return &ValidationError{
-			Message: "Failed to parse response JSON",
-			Value:   string(body),
+			Message:   fmt.Sprintf("JSON解析失败，原始响应: %s", string(body)),
+			Field:     "",
+			Value:     string(body),
+			RequestID: resp.Header.Get("x-amzn-RequestId"),
 		}
 	}
 
